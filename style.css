@@ -62,13 +62,13 @@ button {
   color: var(--text-color);
 }
 .wrapper {
-    max-height: 80dvh;
-    margin: 2% auto;
-    display: grid;
-    border-radius: 5px;
-    width: max(50vh, 300px);
-    grid-template-rows: 1fr 3fr;
-    box-shadow: 0px 3px 12px black;
+  max-height: 80dvh;
+  margin: 5% auto;
+  display: grid;
+  border-radius: 5px;
+  width: max(50vh, 300px);
+  grid-template-rows: 1fr 3fr;
+  box-shadow: 0px 3px 12px black;
 }
 .controls {
     padding: 5%;
@@ -79,7 +79,7 @@ button {
 }
 
 .controls > button {
-  font-size: clamp(.8rem, 1vw + 1rem, 2rem);
+  font-size: clamp(.8rem, 1vw, 2rem);
   justify-self: center;
 }
 
@@ -88,19 +88,18 @@ button {
 }
 
 .board {
+  padding: 3%;
   background-color: var(--color-secondary);
-    border-radius: 3px;
-    background-color: #083344;
-    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-    gap: 8px;
+  background-color: #083344;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  gap: 8px;
 }
 .grid {
-    margin:2%;
-    font-size: clamp(1.5rem, 2vw + 3rem, 7rem);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color:var(--color-secondary);
-    gap: 16px;
+  font-size: clamp(1.5rem, 2vw + 3rem, 7rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:var(--color-secondary);
+  gap: 16px;
 }
 
