@@ -81,7 +81,8 @@ button {
 }
 
 .controls > button {
-  font-size: clamp(.8rem, 1vw, 2rem);
+  outline: none;
+  font-size: clamp(1rem, 1vw, 2rem);
   justify-self: center;
 }
 
@@ -97,6 +98,7 @@ button {
   gap: 8px;
 }
 .grid {
+  user-select: none;
   font-size: clamp(1.5rem, 2vw + 3rem, 7rem);
   display: flex;
   justify-content: center;
