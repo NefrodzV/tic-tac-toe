@@ -46,6 +46,7 @@ html:focus-within {
 body {
     min-height: 100dvh;
     font-family: var(--font-family);
+    color: var(--text-color);
 }
 
 button, div, h2 {
@@ -54,23 +55,32 @@ font-family: inherit;
 .wrapper, .board, .controls{
     display: grid;
 }
-
+button {
+  background-color: var(--color-secondary);
+  border-radius: 5px;
+  width:100px;
+  color: var(--text-color);
+}
 .wrapper {
     max-height: 80dvh;
-    margin: 0 auto;
+    margin: 2% auto;
     display: grid;
     border-radius: 5px;
     width: max(50vh, 300px);
     grid-template-rows: 1fr 3fr;
-    gap: 20px;
-    box-shadow: 0px 3px 6px black;
+    box-shadow: 0px 3px 12px black;
 }
 .controls {
-    border-bottom: 5px solid black;
-    justify-self: center;
+    padding: 5%;
+    width: 100%;
     background-color: var(--color-primary);
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, auto);
     gap: 8px;
+}
+
+.controls > button {
+  font-size: clamp(.8rem, 1vw + 1rem, 2rem);
+  justify-self: center;
 }
 
 .controls>h2 {
@@ -78,15 +88,19 @@ font-family: inherit;
 }
 
 .board {
+  background-color: var(--color-secondary);
     border-radius: 3px;
     background-color: #083344;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
     gap: 8px;
 }
 .grid {
-    
-    /* border: 15px solid#0891b2; */
-    background-color: whitesmoke;
+    margin:2%;
+    font-size: clamp(1.5rem, 2vw + 3rem, 7rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:var(--color-secondary);
     gap: 16px;
 }
 
