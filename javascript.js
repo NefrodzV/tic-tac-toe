@@ -21,13 +21,14 @@ function ticTacToeElement(id, style) {
 const gameBoard = (function() {
     const grids = [];
 
-    // Creates the grid depending on the number
+    // Creates the grid depending on the number and adds its listeners
     const createGrids = (number) => {
         for(let i = 0; i < number; i++) {
             const grid = ticTacToeElement(i, 'grid');
+            addEventListeners(grid);
             grids.push(grid);
         }
-        addEventListeners();
+        
     }
 
     const displayController = (()=> {
@@ -42,13 +43,10 @@ const gameBoard = (function() {
         }
     })();
 
-    function addEventListeners() {
-        grids.forEach(grid => {
-            let element = grid.element;
-            element.addEventListener('click', () => {
-                grid.setText(grid.id);
-            })
-        });
+    function addEventListeners(grid) {
+        grid.element.addEventListener('click', () => {
+            grid.setText(grid.id);
+        })
     }
 
     return {
