@@ -6,13 +6,18 @@ const board = document.querySelector('.board');
 function ticTacToeElement(id, style) {
     const element = document.createElement('div');
     element.classList.add(style);
+    let symbol = null;
+    const updateElementText = () =>  {
+        element.textContent = symbol;
+    }
     return {
         element, 
         getId() {
             return id
         }, 
-        setText (symbol) {
-            element.textContent = symbol;
+        setText (string) {
+            symbol = string;
+            updateElementText();
         }
     }
 }
