@@ -28,7 +28,6 @@ function ticTacToeElement(id, style) {
 // Gameboard object
 const gameBoard = (function() {
     const grids = [];
-    // Represents the grids clicked and their symbols will be checked after turn 5
 
     // Represent the player symbols
     const playerOneSymbol = 'X';
@@ -64,6 +63,7 @@ const gameBoard = (function() {
             case 0:
                 grid.setText(playerOneSymbol);
                 playerTurn++;
+                break;
             case 1:
                 grid.setText(playerTwoSymbol);
                 playerTurn++;
@@ -86,7 +86,7 @@ const gameBoard = (function() {
         }
         
     }
-    
+
     const calculateWinner = () => {
         let winningSymbol = null;
 
