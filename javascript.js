@@ -2,7 +2,7 @@ const pvpButton = document.querySelector('#pvp-button');
 const aiButton = document.querySelector('ai-button');
 const board = document.querySelector('.board');
 
-// Represent the grid of the board
+// Represent a grid of the board
 function ticTacToeElement(id, style) {
     const element = document.createElement('div');
     element.classList.add(style);
@@ -18,6 +18,9 @@ function ticTacToeElement(id, style) {
         setText (string) {
             symbol = string;
             updateElementText();
+        },
+        getSymbol() {
+            return symbol;
         }
     }
 }
@@ -26,8 +29,8 @@ function ticTacToeElement(id, style) {
 const gameBoard = (function() {
     const grids = [];
     // Represents the grids clicked and their symbols will be checked after turn 5
-    const gridsClickedMap = new Map();
-    // Represent the player turn
+
+    // Represent the player symbols
     const playerOneSymbol = 'X';
     const playerTwoSymbol = 'O';
 
@@ -59,85 +62,100 @@ const gameBoard = (function() {
     function gameFlow(grid) {
         switch (playerTurn % 2) {
             case 0:
-                gridsClickedMap.set(grid.getId(), playerOneSymbol);
                 grid.setText(playerOneSymbol);
-                // console.log("Player turn is even");
                 playerTurn++;
-                break;
             case 1:
-                gridsClickedMap.set(grid.getId(), playerTwoSymbol);
                 grid.setText(playerTwoSymbol);
-                // console.log("Player turn is odd");
                 playerTurn++;
                 break;
             
             default:
                 break;
         }
-        // Start calculating winner when fifth turn is up
+
         if(playerTurn >= 5) {
-            calculateWinner();
-            console.log("More than turn 5 starting to calculate winner");
-         
+            console.log("More than turn 5 starting to calculate winner.................");
+            let winner = calculateWinner();
+            if( winner !== null) {
+                console.log("The winner is " + winner);
+            }
         }
-        // console.log('Player turn value is: ' + playerTurn);
-        console.log(gridsClickedMap.entries());
+        
         if(playerTurn === 9) {
             console.log('Game has ended');
         }
+        
     }
-
     
     const calculateWinner = () => {
-        // Horizontal Patterns
-        if(mapKeysExist(0, 1, 2)) {
-            if (keysHaveSameSymbol(0, 1, 2)) {
-                printWinner(); 
+        let winningSymbol = null;
+
+        let firstRow = calculateGridsSymbolsEquality(0, 1, 2);
+        let secondRow = calculateGridsSymbolsEquality(3, 4, 5);
+        let thirdRow = calculateGridsSymbolsEquality(6, 7, 8);
+
+        let firstColumn = calculateGridsSymbolsEquality(0, 3, 6);
+        let secondColumn = calculateGridsSymbolsEquality(1, 4, 7);
+        let thirdColumn = calculateGridsSymbolsEquality(2, 5, 8);
+
+        let diagonalUpperLeftToDownRight = calculateGridsSymbolsEquality(0, 4, 8);
+        let diagonalDownLeftToUpperRight = calculateGridsSymbolsEquality(6, 4, 2);
+
+        const values = [firstRow, secondRow, thirdRow, firstColumn, secondColumn, thirdColumn, diagonalDownLeftToUpperRight, diagonalUpperLeftToDownRight];
+        for(let i = 0; i < values.length; i++) {
+            console.log("winning values array : index =>" + i + " => value: " + values[i]);
+            
+            if(values[i] !== null) {
+                winningSymbol = values[i];
+                break;
             }
         }
 
-        if(mapKeysExist(3, 4, 5)) {
-            if (keysHaveSameSymbol(3, 4, 5)) {
-                printWinner(); 
-            }
-        }
-
-        if(mapKeysExist(6, 7, 8)) {
-            if (keysHaveSameSymbol(6, 7, 8)) {
-                printWinner(); 
-            }
-        }
-        // Vertical Patterns
-        if(mapKeysExist(0, 3, 6)) {
-            if (keysHaveSameSymbol(0, 3, 6)) {
-                printWinner(); 
-            }
-        }
-
-        if(mapKeysExist(1, 4, 7)) {
-            if (keysHaveSameSymbol(1, 4, 7)) {
-                printWinner(); 
-            }
-        }
-
-        if(mapKeysExist(2, 5, 8)) {
-            if (keysHaveSameSymbol(2, 5, 8)) {
-                printWinner(); 
-            }
-        }
-
-        // Diagonal
-        if(mapKeysExist(0, 4, 8)) {
-            if (keysHaveSameSymbol(0, 4, 8)) {
-                printWinner(); 
-            }
-        }
+        return winningSymbol;
     }
+
+    const calculateGridsSymbolsEquality = (firstIndex, secondIndex, thirdIndex) => {
+        const firstGrid = grids[firstIndex];
+        const secondGrid = grids[secondIndex];
+        const thirdGrid = grids[thirdIndex];
+
+        let firstGridSymbol = firstGrid.getSymbol();
+        let secondGridSymbol = secondGrid.getSymbol();
+        let thirdGridSymbol = thirdGrid.getSymbol();
+
+        if(firstGridSymbol === null) {
+            return null;
+        }
+        
+        if(secondGridSymbol === null) {
+            return null;
+        }
+
+        if(thirdGridSymbol === null) {
+            return null;
+        }
+
+        // Only return symbol if firstSymbol and second symbol are equal and second symbol and third symbol are equal
+        if(firstGridSymbol !== secondGridSymbol || secondGridSymbol !== thirdGridSymbol) {
+            return null;
+        }
+
+        return firstGridSymbol;
+    }
+    
 
     function mapKeysExist(oneKey, secondKey, thirdKey) {
         return gridsClickedMap.has(oneKey) 
         && gridsClickedMap.has(secondKey) 
         && gridsClickedMap.has(thirdKey);
+    }
+
+    function objectsHaveSameSymbol(firstGrid, secondGrid, thirdGrid) {
+        let firstSymbol = gridsMap.get(firstGrid).getSymbol();
+        let secondSymbol = gridsMap.get(secondGrid).getSymbol();
+        let thirdSymbol = gridsMap.get(thirdGrid).getSymbol();
+
+        return firstSymbol === secondSymbol && secondSymbol === thirdSymbol;
     }
 
     function keysHaveSameSymbol(firstKey, secondKey, thirdKey) {
