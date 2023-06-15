@@ -25,18 +25,30 @@ function ticTacToeElement(id, style) {
     }
 }
 
+// Symbols of the game
+const GameSymbols = {
+    X :"X",
+    O : "O"
+}
+// To create player objects
+function playerFactory(symbol) {
+    return {
+        symbol
+    }
+}
+
 // Gameboard object
 const gameBoard = (function() {
     const grids = [];
 
-    // Represent the player symbols
-    const playerOneSymbol = 'X';
-    const playerTwoSymbol = 'O';
+    // Represents the players
+    const playerOne = playerFactory(GameSymbols.X);
+    const playerTwo = playerFactory(GameSymbols.O);
 
     // Represents the turn counter if its even its player one turn if the value is 
     //odd then its player two turn
     let playerTurn = 0;
-
+    let winnerStatus = false;
     // Creates the grid depending on the number and adds its listeners
     const createGrids = (number) => {
         for(let i = 0; i < number; i++) {
@@ -57,39 +69,45 @@ const gameBoard = (function() {
             displayElements
         }
     })();
+
     // Adds the symbols depending on the player turn
     function gameFlow(grid) {
+        // Stop the game if there is a winner set to true
+        if(winnerStatus === true) {
+            return;
+        }
+
         switch (playerTurn % 2) {
             case 0:
-                grid.setText(playerOneSymbol);
-                playerTurn++;
+                grid.setText(playerOne.symbol);
                 break;
             case 1:
-                grid.setText(playerTwoSymbol);
-                playerTurn++;
+                grid.setText(playerTwo.symbol);
                 break;
             
             default:
                 break;
         }
 
-        if(playerTurn >= 5) {
+        if(playerTurn >= 4) {
             console.log("More than turn 5 starting to calculate winner.................");
-            let winner = calculateWinner();
-            if( winner !== null) {
-                console.log("The winner is " + winner);
+            calculateWinner();
+            if(winnerStatus === true) {
+                printWinner();
+                return;
             }
         }
-        
-        if(playerTurn === 9) {
-            console.log('Game has ended');
+
+        playerTurn++;
+
+        // When player turn is 9 just set the game to draw if there is no winner
+        if(playerTurn === 9)  {
+            console.log('Game has ended in a draw');
+            return;
         }
-        
     }
 
     const calculateWinner = () => {
-        let winningSymbol = null;
-
         let firstRow = calculateGridsSymbolsEquality(0, 1, 2);
         let secondRow = calculateGridsSymbolsEquality(3, 4, 5);
         let thirdRow = calculateGridsSymbolsEquality(6, 7, 8);
@@ -105,13 +123,11 @@ const gameBoard = (function() {
         for(let i = 0; i < values.length; i++) {
             console.log("winning values array : index =>" + i + " => value: " + values[i]);
             
-            if(values[i] !== null) {
-                winningSymbol = values[i];
+            if(values[i] === true) {
+                winnerStatus = true;
                 break;
             }
         }
-
-        return winningSymbol;
     }
 
     const calculateGridsSymbolsEquality = (firstIndex, secondIndex, thirdIndex) => {
@@ -124,56 +140,27 @@ const gameBoard = (function() {
         let thirdGridSymbol = thirdGrid.getSymbol();
 
         if(firstGridSymbol === null) {
-            return null;
+            return false;
         }
         
         if(secondGridSymbol === null) {
-            return null;
+            return false;
         }
 
         if(thirdGridSymbol === null) {
-            return null;
+            return false;
         }
 
-        // Only return symbol if firstSymbol and second symbol are equal and second symbol and third symbol are equal
-        if(firstGridSymbol !== secondGridSymbol || secondGridSymbol !== thirdGridSymbol) {
-            return null;
-        }
-
-        return firstGridSymbol;
+        return firstGridSymbol === secondGridSymbol && secondGridSymbol === thirdGridSymbol;
     }
     
-
-    function mapKeysExist(oneKey, secondKey, thirdKey) {
-        return gridsClickedMap.has(oneKey) 
-        && gridsClickedMap.has(secondKey) 
-        && gridsClickedMap.has(thirdKey);
-    }
-
-    function objectsHaveSameSymbol(firstGrid, secondGrid, thirdGrid) {
-        let firstSymbol = gridsMap.get(firstGrid).getSymbol();
-        let secondSymbol = gridsMap.get(secondGrid).getSymbol();
-        let thirdSymbol = gridsMap.get(thirdGrid).getSymbol();
-
-        return firstSymbol === secondSymbol && secondSymbol === thirdSymbol;
-    }
-
-    function keysHaveSameSymbol(firstKey, secondKey, thirdKey) {
-        let oneKey = gridsClickedMap.get(firstKey);
-        let second = gridsClickedMap.get(secondKey);
-        let third = gridsClickedMap.get(thirdKey);
-        if(oneKey === second && second === third) {
-            console.log("The winner is " + oneKey);
-        }       
-    }
-
     function printWinner() {
         switch(playerTurn % 2) {
             case 0:
-                console.log("Winner is " + playerOneSymbol);
+                console.log("Winner is " + playerOne.symbol);
                 break;
             case 1: 
-                console.log("Winner is " + playerTwoSymbol);
+                console.log("Winner is " + playerTwo.symbol);
                 break;
             default:
                 console.log("Something went wrong printing the winner");
@@ -183,7 +170,7 @@ const gameBoard = (function() {
     function addEventListener(grid) {
         grid.element.addEventListener('click', () => {
             gameFlow(grid);
-        })
+        },{once:true})
     }
     
 
@@ -193,6 +180,7 @@ const gameBoard = (function() {
         displayController
     }
 })();
+
 gameBoard.createGrids(9);
 gameBoard.displayController.displayElements(board)
 
