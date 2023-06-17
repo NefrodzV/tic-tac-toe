@@ -15,6 +15,10 @@ function ticTacToeElement(style) {
     const toggleBackgroundColor = () => {
         element.toggleAttribute('win');
     }
+
+    const hasBackgroundColorChanged = () => {
+        return element.hasAttribute('win');
+    }
     return {
         element, 
         setText (string) {
@@ -24,7 +28,8 @@ function ticTacToeElement(style) {
         getSymbol() {
             return symbol;
         },
-        toggleBackgroundColor
+        toggleBackgroundColor,
+        hasBackgroundColorChanged
     }
 }
 
@@ -63,19 +68,24 @@ const gameBoard = (function() {
     }
 
     const displayController = (()=> {
+
         const displayElements  = (targetParent) => {
             grids.forEach(grid=> {
                 targetParent.appendChild(grid.element);
             });
         }
 
-        const updateMessage = (targetParent, player) => {
-            targetParent.textContent =  player.symbol + " wins!";
+        const updateMessage = (targetParent, message) => {
+            targetParent.textContent =  message;
         }
-
+        
+        const resetMessage = (targetParent) => {
+            targetParent.textContent = "";
+        }
         return {
             displayElements,
-            updateMessage
+            updateMessage,
+            resetMessage
         }
     })();
 
@@ -83,6 +93,10 @@ const gameBoard = (function() {
     function gameFlow(grid) {
         // Stop the game if there is a winner set to true
         if(winnerStatus === true) {
+            return;
+        }
+
+        if(grid.getSymbol() !== null) {
             return;
         }
 
@@ -111,6 +125,7 @@ const gameBoard = (function() {
 
         // When player turn is 9 just set the game to draw if there is no winner
         if(playerTurn === 9)  {
+            displayController.updateMessage(winnerMessage, 'Draw!')
             console.log('Game has ended in a draw');
             return;
         }
@@ -225,10 +240,10 @@ const gameBoard = (function() {
     function printWinner() {
         switch(playerTurn % 2) {
             case 0:
-                displayController.updateMessage(winnerMessage, playerOne);
+                displayController.updateMessage(winnerMessage, playerOne.symbol + " wins!");
                 break;
             case 1: 
-                displayController.updateMessage(winnerMessage, playerTwo);
+                displayController.updateMessage(winnerMessage, playerTwo.symbol + " wins!");
                 break;
             default:
                 console.log("Something went wrong printing the winner");
@@ -238,19 +253,40 @@ const gameBoard = (function() {
     function addEventListener(grid) {
         grid.element.addEventListener('click', () => {
             gameFlow(grid);
-        },{once:true})
+        });
     }
 
+    const setResetButton = (button) => {
+        button.addEventListener('click', () => {
+            resetGame();
+        });
+    }
     
+    const resetGame = () => {
+        grids.forEach(grid => {
+            grid.setText(null);
+            if(grid.hasBackgroundColorChanged()){
+                grid.toggleBackgroundColor();
+            }
+            
+            
+        });
+        displayController.resetMessage(winnerMessage);
+        playerTurn = 0;
+        winnerStatus = false;
+    }
     
     return {
         grids,
         createGrids,
-        displayController
+        displayController,
+        setResetButton
     }
 })();
 
 gameBoard.createGrids(9);
 gameBoard.displayController.displayElements(board)
+gameBoard.setResetButton(resetButton);
+
 
 
