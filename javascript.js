@@ -1,6 +1,8 @@
 const pvpButton = document.querySelector('#pvp-button');
 const aiButton = document.querySelector('ai-button');
 const board = document.querySelector('.board');
+const winnerMessage = document.querySelector('.message');
+const resetButton = document.querySelector('#reset');
 
 // Represent a grid of the board
 function ticTacToeElement(style) {
@@ -67,8 +69,13 @@ const gameBoard = (function() {
             });
         }
 
+        const updateMessage = (targetParent, player) => {
+            targetParent.textContent =  player.symbol + " wins!";
+        }
+
         return {
-            displayElements
+            displayElements,
+            updateMessage
         }
     })();
 
@@ -218,10 +225,10 @@ const gameBoard = (function() {
     function printWinner() {
         switch(playerTurn % 2) {
             case 0:
-                console.log("Winner is " + playerOne.symbol);
+                displayController.updateMessage(winnerMessage, playerOne);
                 break;
             case 1: 
-                console.log("Winner is " + playerTwo.symbol);
+                displayController.updateMessage(winnerMessage, playerTwo);
                 break;
             default:
                 console.log("Something went wrong printing the winner");
@@ -233,6 +240,8 @@ const gameBoard = (function() {
             gameFlow(grid);
         },{once:true})
     }
+
+    
     
     return {
         grids,
