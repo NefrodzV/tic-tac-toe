@@ -3,25 +3,26 @@ const aiButton = document.querySelector('ai-button');
 const board = document.querySelector('.board');
 
 // Represent a grid of the board
-function ticTacToeElement(id, style) {
+function ticTacToeElement(style) {
     const element = document.createElement('div');
     element.classList.add(style);
     let symbol = null;
     const updateElementText = () =>  {
         element.textContent = symbol;
     }
+    const toggleBackgroundColor = () => {
+        element.toggleAttribute('win');
+    }
     return {
         element, 
-        getId() {
-            return id
-        }, 
         setText (string) {
             symbol = string;
             updateElementText();
         },
         getSymbol() {
             return symbol;
-        }
+        },
+        toggleBackgroundColor
     }
 }
 
@@ -52,7 +53,8 @@ const gameBoard = (function() {
     // Creates the grid depending on the number and adds its listeners
     const createGrids = (number) => {
         for(let i = 0; i < number; i++) {
-            const grid = ticTacToeElement(i, 'grid');
+            const grid = ticTacToeElement('grid');
+            console.log(grid);
             addEventListener(grid);
             grids.push(grid);
         }
@@ -125,9 +127,68 @@ const gameBoard = (function() {
             
             if(values[i] === true) {
                 winnerStatus = true;
+                changeWinnerRowColors(i);
                 break;
             }
         }
+    }
+    
+    const changeWinnerRowColors = (rowIdentifier) => {
+        switch(rowIdentifier) {
+            // Rows
+            case 0: 
+                changeGridColor(0);
+                changeGridColor(1);
+                changeGridColor(2);
+                break;
+            case 1:
+                changeGridColor(3);
+                changeGridColor(4);
+                changeGridColor(5);
+                break;
+            case 2:
+                changeGridColor(6);
+                changeGridColor(7);
+                changeGridColor(8);
+                break;
+            // Columns
+            case 3:
+                changeGridColor(0);
+                changeGridColor(3);
+                changeGridColor(6);
+                break;
+
+            case 4:
+                changeGridColor(1);
+                changeGridColor(4);
+                changeGridColor(7);
+                break;
+            
+            case 5:
+                changeGridColor(2);
+                changeGridColor(5);
+                changeGridColor(8);
+                break;
+            // Diagonal
+            case 6:
+                changeGridColor(6);
+                changeGridColor(4);
+                changeGridColor(2);
+                break;
+            case 7:
+               changeGridColor(0);
+                changeGridColor(4);
+                changeGridColor(8);
+                break;
+            default:
+                console.log("Something went wrong changing the background color of grids");
+
+        }
+    }
+
+    const changeGridColor = (arrayIndex) => {
+        let grid = grids[arrayIndex];
+        grid.toggleBackgroundColor();
     }
 
     const calculateGridsSymbolsEquality = (firstIndex, secondIndex, thirdIndex) => {
@@ -173,7 +234,6 @@ const gameBoard = (function() {
         },{once:true})
     }
     
-
     return {
         grids,
         createGrids,
