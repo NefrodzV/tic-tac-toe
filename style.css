@@ -2,9 +2,10 @@
 
 :root {
     --color-primary:#083344;
-    --color-secondary:#0891b2;
+    --color-secondary:#a5f3fc;
+    --grid-win-color:#088eaf;
     --font-family: 'Titillium Web', sans-serif;
-    --text-color:whitesmoke;
+    --text-color:var(--color-primary);
 }
 
 /*************** R E S E T **********************/
@@ -90,6 +91,7 @@ button {
 }
 
 .board {
+  position: relative;
   padding: 3%;
   background-color: var(--color-secondary);
   background-color: #083344;
@@ -106,3 +108,6 @@ button {
   gap: 16px;
 }
 
+.grid[win] {
+  background-color: var(--grid-win-color);
+}
